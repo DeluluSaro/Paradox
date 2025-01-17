@@ -15,6 +15,7 @@ import { createProject } from "@/actions/projects";
 import { projectSchema } from "@/lib/validators";
 import OrgSwitcher from "@/components/OrgSwitcher";
 import { LoaderCircle } from "lucide-react";
+import { toast } from "sonner";
 
 export default function CreateProjectPage() {
   const router = useRouter();
@@ -54,6 +55,7 @@ export default function CreateProjectPage() {
 
   useEffect(() => {
     if (project) router.push(`/project/${project.id}`);
+    
   }, [loading]);
 
   if (!isOrgLoaded || !isUserLoaded) {
