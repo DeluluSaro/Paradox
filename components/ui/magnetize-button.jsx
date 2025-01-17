@@ -83,6 +83,7 @@ function MagnetizeButton({
             ))}
             <span className="relative w-full flex items-center justify-center gap-2">
                 <PersonStanding
+                
                     className={cn("w-4 h-4 transition-transform duration-300", isAttracting && "scale-110")} />
                 {isAttracting ? "Let's dive..." : "Get started"}
             </span>
