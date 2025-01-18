@@ -26,21 +26,55 @@ export async function getOrganization(slug) {
     return null;
   }
 
-  const {data:membership} = await clerkClient().organizations.getOrganizationMembershipList({
-    organizationId:organization.id
-  });
+  const { data: membership } =
+    await clerkClient().organizations.getOrganizationMembershipList({
+      organizationId: organization.id,
+    });
 
+  const userMembership = membership.find(
+    (member) => member.publicUserData.userId === userId
+  );
 
-
-  const userMembership=membership.find((member)=>member.publicUserData.userId===userId)
-
-
-  if(!userMembership){
-    return null
+  if (!userMembership) {
+    return null;
   }
 
-  return organization
+  return organization;
+}
+
+export async function getOrganizationUsers(orgId) {
+  const { userId } = auth();
+
+  if (!userId) {
+    throw new Error("Unauthorized");
+  }
+
+  const user = await db.user.findUnique({
+    where: { clerkUserId: userId },
+  });
+
+  if (!user) {
+    throw new Error("User Not Found");
+  }
+
+  const organizationMembership =
+    await clerkClient().organizations.getOrganizationMembershipList({
+      organizationId: orgId,
+    });
+
+  const userIds = organizationMembership.data.map(
+    (membership) => membership.publicUserData.userId
+  );
 
 
 
+  const users=await db.user.findMany({
+    where:{
+      clerkUserId:{
+        in:userIds
+      }
+    }
+  })
+
+  return users
 }
