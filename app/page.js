@@ -6,6 +6,7 @@ import Link from "next/link";
 import faqs from "@/data/faqs";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { MagnetizeButton } from "@/components/ui/magnetize-button";
+
 const features = [
   {
     title: "Intuitive Kanban Boards",
@@ -30,6 +31,9 @@ const features = [
 export default function Home() {
   return (
     <div className="min-h-screen ">
+     
+    
+
       <section className="container mx-auto py-20 text-center">
         <h1 className="text-6xl sm:text-7xl lg:text-8xl font-extrabold  gradient-title pb-6 flex flex-col">
           Streamline your workflow <br></br>
@@ -49,7 +53,7 @@ export default function Home() {
           Empower your team with our project management tool
         </p>
         <Link href="/onboarding">
-          <Button size="lg" className="mr-4 bg-slate-500 text-white ">
+          <Button size="lg" className="mr-4 bg-gray-600 text-white ">
             Get Started{" "}
             <ChevronRight size={18} className="ml-1">
               {" "}
@@ -63,8 +67,34 @@ export default function Home() {
               {" "}
             </ChevronRight>
           </Button>
+
+          
         </Link>
+       
       </section>
+      
+
+{/* <section className="h-screen pt-10 bg-black">
+<Hero
+      title="AI that works for you."
+      subtitle="Transform your workflow with intelligent automation. Simple, powerful, reliable."
+      actions={[
+        {
+          label: "Try Demo",
+          href: "#",
+          variant: "outline"
+        },
+        {
+          label: "Start Free",
+          href: "#",
+          variant: "primary"
+        }
+      ]}
+      titleClassName="text-5xl md:text-6xl font-extrabold"
+      subtitleClassName="text-lg md:text-xl max-w-[600px]"
+      actionsClassName="mt-8"
+    />
+</section> */}
 
       <section id="features" className="bg-gray-900 py-20 px-5">
         <div className="container mx-auto">
@@ -93,7 +123,7 @@ export default function Home() {
 
       <section className="bg-gray-900 py-20 px-5">
         <div className="container mx-auto">
-          <h3 className="text-3xl font-bold mb-12 text-center">
+          <h3 className="text-4xl font-bold mb-12 text-center gradient-title">
             Frequently Asked Question
           </h3>
 
@@ -124,7 +154,9 @@ export default function Home() {
           <p className="text-xl mb-12 text-center">Collaborate with your team and make a project workflow a better placee</p>
 
 
-          <MagnetizeButton particleCount={50} attractRadius={10}></MagnetizeButton>
+        <Link href={'/onboarding'}> 
+        <MagnetizeButton particleCount={50} attractRadius={10} ></MagnetizeButton>
+        </Link>
         </div>
 
       </section>

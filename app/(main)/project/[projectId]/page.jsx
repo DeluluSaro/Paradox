@@ -17,7 +17,7 @@ const ProjectPage = async ({ params }) => {
     notFound()
   }
   return (
-    <div className='mx-auto container py-20 px-5'>
+    <div className='mx-auto container py-20 px-5 min-h-screen'>
       {/* SprintCreation */}
       <SprintCreationForm projectTitle={project.name} projectId={projectId} projectKey={project.key} sprintKey={project.sprints?.length + 1}></SprintCreationForm>
       {/* SprintBoard */}

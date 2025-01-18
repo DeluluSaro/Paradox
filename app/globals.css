@@ -9,7 +9,7 @@ body {
 
 @layer utilities{
   .gradient-title{
-    @apply font-extrabold bg-gradient-to-br from-blue-500 via-blue-100 to-blue-400 bg-clip-text tracking-tighter text-transparent pr-2 pb-2
+    @apply font-extrabold bg-gradient-to-br from-[#373A40] via-[#d6d6d6] to-[#EEEEEE] bg-clip-text tracking-tighter text-transparent pr-2 pb-2
   }
 }
 @layer base {
@@ -83,4 +83,35 @@ body {
   background-size: 30px 30px;
 }
 
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    
+    --brand: 210 100% 50%;
+    --brand-foreground: 213 100% 60%;
+    
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+  }
+ 
+  .dark {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    
+    --brand: 213 100% 60%;
+    --brand-foreground: 210 100% 50%;
+    
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+  }
+}
+
+/* Utility classes */
+@layer utilities {
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-b from-foreground via-foreground/90 to-muted-foreground;
+  }
+}
 

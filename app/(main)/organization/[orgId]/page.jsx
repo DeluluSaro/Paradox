@@ -28,7 +28,7 @@ const OrganizationPage = async ({ params }) => {
 
         <ProjectList orgId={organization.id}></ProjectList>
       </div>
-      <div className='mt-8 '>Show user assigned and reported issues here.</div>
+      <div className='mt-8 '> </div>
     </div>
   )
 }

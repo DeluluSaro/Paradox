@@ -81,7 +81,7 @@ export default function CreateProjectPage() {
 
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col space-y-4"
+        className="flex flex-col space-y-4 p-10"
       >
         <div>
           <Input
@@ -125,7 +125,7 @@ export default function CreateProjectPage() {
           type="submit"
           size="lg"
           disabled={loading}
-          className="bg-blue-500 text-white"
+          className="bg-gradient-to-br from-[#373A40] via-[#EEEEEE] to-[#686D76] hover:bg-white hover:text-white text-black"
         >
           {loading ? "Creating..." : "Create Project"}
         </Button>

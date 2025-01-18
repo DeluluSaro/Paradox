@@ -94,7 +94,7 @@ export default function IssueCreationDrawer({
           <DrawerTitle>Create New Issue</DrawerTitle>
         </DrawerHeader>
         {usersLoading && <BarLoader width={"100%"} color="#36d7b7" />}
-        <form onSubmit={handleSubmit(onSubmit)} className="p-4 space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="p-10 space-y-4">
           <div>
             <label htmlFor="title" className="block text-sm font-medium mb-1">
               Title
@@ -191,7 +191,7 @@ export default function IssueCreationDrawer({
           <Button
             type="submit"
             disabled={createIssueLoading}
-            className="w-full"
+            className="w-full hover:bg-white hover:text-black hover:border"
           >
             {createIssueLoading ? "Creating..." : "Create Issue"}
           </Button>
