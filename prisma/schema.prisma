@@ -67,6 +67,7 @@ model Issue {
   @@index([status, order])
 }
 
+
 enum SprintStatus {
   PLANNED
   ACTIVE

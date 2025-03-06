@@ -31,10 +31,7 @@ const features = [
 export default function Home() {
   return (
     <div className="min-h-screen ">
-     
-    
-
-      <section className="container mx-auto py-20 text-center">
+     <section className="container mx-auto py-20 text-center">
         <h1 className="text-6xl sm:text-7xl lg:text-8xl font-extrabold  gradient-title pb-6 flex flex-col">
           Streamline your workflow <br></br>
           <span className="flex mx-auto gap-3 sm:gap-4 items-center">
@@ -154,7 +151,7 @@ export default function Home() {
           <p className="text-xl mb-12 text-center">Collaborate with your team and make a project workflow a better placee</p>
 
 
-        <Link href={'/onboarding'}> 
+        <Link href={'/'}> 
         <MagnetizeButton particleCount={50} attractRadius={10} ></MagnetizeButton>
         </Link>
         </div>
