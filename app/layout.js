@@ -13,6 +13,11 @@ const inter = Outfit({ subsets: ["latin"] });
 export const metadata = {
   title: "Paradox",
   description: "Project Management App",
+  icons: {
+    icon: "/paradox.ico",
+    shortcut: "/paradox.ico",
+    apple: "/paradox.ico",
+  },
 };
 
 export default function RootLayout({ children }) {
