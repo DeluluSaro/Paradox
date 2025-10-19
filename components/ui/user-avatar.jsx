@@ -11,9 +11,16 @@ const UserAvatar = ({ user }) => {
           {user ? user.name : "?"}
         </AvatarFallback>
       </Avatar>
-      <span className="text-xs text-gray-500">
-        {user ? user.name : "Unassigned"}
-      </span>
+      <div className="flex flex-col">
+        <span className="text-xs text-gray-500 font-medium">
+          {user ? user.name : "Unassigned"}
+        </span>
+        {user?.email && (
+          <span className="text-xs text-gray-400">
+            {user.email}
+          </span>
+        )}
+      </div>
     </div>
   );
 };

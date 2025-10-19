@@ -4,7 +4,7 @@ import { db } from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 
 export async function getIssuesForSprint(sprintId) {
-  const { userId, orgId } = auth();
+  const { userId, orgId } = await auth();
 
   if (!userId || !orgId) {
     throw new Error("Unauthorized");
@@ -19,11 +19,43 @@ export async function getIssuesForSprint(sprintId) {
     },
   });
 
-  return issues;
+  // Serialize the issues to plain objects
+  return issues.map(issue => ({
+    id: issue.id,
+    title: issue.title,
+    description: issue.description,
+    status: issue.status,
+    order: issue.order,
+    priority: issue.priority,
+    assigneeId: issue.assigneeId,
+    reporterId: issue.reporterId,
+    projectId: issue.projectId,
+    sprintId: issue.sprintId,
+    createdAt: issue.createdAt.toISOString(),
+    updatedAt: issue.updatedAt.toISOString(),
+    assignee: issue.assignee ? {
+      id: issue.assignee.id,
+      clerkUserId: issue.assignee.clerkUserId,
+      email: issue.assignee.email,
+      name: issue.assignee.name,
+      imageUrl: issue.assignee.imageUrl,
+      createdAt: issue.assignee.createdAt.toISOString(),
+      updatedAt: issue.assignee.updatedAt.toISOString()
+    } : null,
+    reporter: {
+      id: issue.reporter.id,
+      clerkUserId: issue.reporter.clerkUserId,
+      email: issue.reporter.email,
+      name: issue.reporter.name,
+      imageUrl: issue.reporter.imageUrl,
+      createdAt: issue.reporter.createdAt.toISOString(),
+      updatedAt: issue.reporter.updatedAt.toISOString()
+    }
+  }));
 }
 
 export async function createIssue(projectId, data) {
-  const { userId, orgId } = auth();
+  const { userId, orgId } = await auth();
 
   if (!userId || !orgId) {
     throw new Error("Unauthorized");
@@ -56,11 +88,43 @@ export async function createIssue(projectId, data) {
     },
   });
 
-  return issue;
+  // Serialize the issue to plain object
+  return {
+    id: issue.id,
+    title: issue.title,
+    description: issue.description,
+    status: issue.status,
+    order: issue.order,
+    priority: issue.priority,
+    assigneeId: issue.assigneeId,
+    reporterId: issue.reporterId,
+    projectId: issue.projectId,
+    sprintId: issue.sprintId,
+    createdAt: issue.createdAt.toISOString(),
+    updatedAt: issue.updatedAt.toISOString(),
+    assignee: issue.assignee ? {
+      id: issue.assignee.id,
+      clerkUserId: issue.assignee.clerkUserId,
+      email: issue.assignee.email,
+      name: issue.assignee.name,
+      imageUrl: issue.assignee.imageUrl,
+      createdAt: issue.assignee.createdAt.toISOString(),
+      updatedAt: issue.assignee.updatedAt.toISOString()
+    } : null,
+    reporter: {
+      id: issue.reporter.id,
+      clerkUserId: issue.reporter.clerkUserId,
+      email: issue.reporter.email,
+      name: issue.reporter.name,
+      imageUrl: issue.reporter.imageUrl,
+      createdAt: issue.reporter.createdAt.toISOString(),
+      updatedAt: issue.reporter.updatedAt.toISOString()
+    }
+  };
 }
 
 export async function updateIssueOrder(updatedIssues) {
-  const { userId, orgId } = auth();
+  const { userId, orgId } = await auth();
 
   if (!userId || !orgId) {
     throw new Error("Unauthorized");
@@ -84,7 +148,7 @@ export async function updateIssueOrder(updatedIssues) {
 }
 
 export async function deleteIssue(issueId) {
-  const { userId, orgId } = auth();
+  const { userId, orgId } = await auth();
 
   if (!userId || !orgId) {
     throw new Error("Unauthorized");
@@ -120,7 +184,7 @@ export async function deleteIssue(issueId) {
 }
 
 export async function updateIssue(issueId, data) {
-  const { userId, orgId } = auth();
+  const { userId, orgId } = await auth();
 
   if (!userId || !orgId) {
     throw new Error("Unauthorized");

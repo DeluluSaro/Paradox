@@ -4,7 +4,7 @@ import { db } from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 
 export async function createSprint(projectId, data) {
-  const { userId, orgId } = auth();
+  const { userId, orgId } = await auth();
 
   if (!userId || !orgId) {
     throw new Error("Unauthorized");
@@ -29,11 +29,21 @@ export async function createSprint(projectId, data) {
     },
   });
 
-  return sprint;
+  // Serialize the sprint to plain object
+  return {
+    id: sprint.id,
+    name: sprint.name,
+    startDate: sprint.startDate.toISOString(),
+    endDate: sprint.endDate.toISOString(),
+    status: sprint.status,
+    projectId: sprint.projectId,
+    createdAt: sprint.createdAt.toISOString(),
+    updatedAt: sprint.updatedAt.toISOString()
+  };
 }
 
 export async function updateSprintStatus(sprintId, newStatus) {
-  const { userId, orgId, orgRole } = auth();
+  const { userId, orgId, orgRole } = await auth();
 
   if (!userId || !orgId) {
     throw new Error("Unauthorized");
@@ -75,7 +85,19 @@ export async function updateSprintStatus(sprintId, newStatus) {
       data: { status: newStatus },
     });
 
-    return { success: true, sprint: updatedSprint };
+    // Serialize the sprint to plain object
+    const serializedSprint = {
+      id: updatedSprint.id,
+      name: updatedSprint.name,
+      startDate: updatedSprint.startDate.toISOString(),
+      endDate: updatedSprint.endDate.toISOString(),
+      status: updatedSprint.status,
+      projectId: updatedSprint.projectId,
+      createdAt: updatedSprint.createdAt.toISOString(),
+      updatedAt: updatedSprint.updatedAt.toISOString()
+    };
+
+    return { success: true, sprint: serializedSprint };
   } catch (error) {
     throw new Error(error.message);
   }

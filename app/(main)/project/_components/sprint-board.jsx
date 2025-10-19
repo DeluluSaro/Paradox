@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { toast } from "sonner";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -25,10 +25,6 @@ function reorder(list, startIndex, endIndex) {
 }
 
 export default function SprintBoard({ sprints, projectId, orgId }) {
-  const [currentSprint, setCurrentSprint] = useState(
-    sprints.find((spr) => spr.status === "ACTIVE") || sprints[0]
-  );
-
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState(null);
 
@@ -40,11 +36,50 @@ export default function SprintBoard({ sprints, projectId, orgId }) {
     setData: setIssues,
   } = useFetch(getIssuesForSprint);
 
-  const [filteredIssues, setFilteredIssues] = useState(issues);
+  // Memoize sprints with dates to prevent recalculation
+  const sprintsWithDates = useMemo(() => 
+    sprints.map(sprint => ({
+      ...sprint,
+      startDate: new Date(sprint.startDate),
+      endDate: new Date(sprint.endDate),
+      createdAt: new Date(sprint.createdAt),
+      updatedAt: new Date(sprint.updatedAt)
+    })), [sprints]
+  );
+
+  const [currentSprint, setCurrentSprint] = useState(
+    sprintsWithDates.find((spr) => spr.status === "ACTIVE") || sprintsWithDates[0]
+  );
+
+  // Memoize issues with dates to prevent recalculation
+  const issuesWithDates = useMemo(() => 
+    issues ? issues.map(issue => ({
+      ...issue,
+      createdAt: new Date(issue.createdAt),
+      updatedAt: new Date(issue.updatedAt),
+      assignee: issue.assignee ? {
+        ...issue.assignee,
+        createdAt: new Date(issue.assignee.createdAt),
+        updatedAt: new Date(issue.assignee.updatedAt)
+      } : null,
+      reporter: {
+        ...issue.reporter,
+        createdAt: new Date(issue.reporter.createdAt),
+        updatedAt: new Date(issue.reporter.updatedAt)
+      }
+    })) : [], [issues]
+  );
+
+  const [filteredIssues, setFilteredIssues] = useState([]);
 
   const handleFilterChange = (newFilteredIssues) => {
     setFilteredIssues(newFilteredIssues);
   };
+
+  // Update filteredIssues when issues change
+  useEffect(() => {
+    setFilteredIssues(issuesWithDates);
+  }, [issuesWithDates]);
 
   useEffect(() => {
     if (currentSprint.id) {
@@ -90,7 +125,7 @@ export default function SprintBoard({ sprints, projectId, orgId }) {
       return;
     }
 
-    const newOrderedData = [...issues];
+    const newOrderedData = [...issuesWithDates];
 
     // source and destination list
     const sourceList = newOrderedData.filter(
@@ -132,7 +167,7 @@ export default function SprintBoard({ sprints, projectId, orgId }) {
     }
 
     const sortedIssues = newOrderedData.sort((a, b) => a.order - b.order);
-    setIssues(newOrderedData, sortedIssues);
+    setIssues(sortedIssues);
 
     updateIssueOrderFn(sortedIssues);
   };
@@ -144,12 +179,12 @@ export default function SprintBoard({ sprints, projectId, orgId }) {
       <SprintManager
         sprint={currentSprint}
         setSprint={setCurrentSprint}
-        sprints={sprints}
+        sprints={sprintsWithDates}
         projectId={projectId}
       />
 
-      {issues && !issuesLoading && (
-        <BoardFilters issues={issues} onFilterChange={handleFilterChange} />
+      {issuesWithDates && !issuesLoading && (
+        <BoardFilters issues={issuesWithDates} onFilterChange={handleFilterChange} />
       )}
 
       {updateIssuesError && (
@@ -172,7 +207,7 @@ export default function SprintBoard({ sprints, projectId, orgId }) {
                   <h3 className="font-semibold mb-2 text-center">
                     {column.name}
                   </h3>
-                  {filteredIssues
+                  {issuesWithDates
                     ?.filter((issue) => issue.status === column.key)
                     .map((issue, index) => (
                       <Draggable

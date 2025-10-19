@@ -81,6 +81,7 @@ export default function BoardFilters({ issues, onFilterChange }) {
                     zIndex: i,
                   }}
                   onClick={() => toggleAssignee(assignee.id)}
+                  title={`${assignee.name} - ${assignee.email}`}
                 >
                   <Avatar className="h-10 w-10">
                     <AvatarImage src={assignee.imageUrl} />

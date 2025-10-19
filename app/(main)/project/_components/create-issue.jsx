@@ -128,7 +128,12 @@ export default function IssueCreationDrawer({
                   <SelectContent>
                     {users?.map((user) => (
                       <SelectItem key={user.id} value={user.id}>
-                        {user?.name}
+                        <div className="flex justify-between items-center w-full">
+                          <span>{user?.name}</span>
+                          <span className="text-xs text-gray-500 ml-2">
+                            {user?.email}
+                          </span>
+                        </div>
                       </SelectItem>
                     ))}
                   </SelectContent>

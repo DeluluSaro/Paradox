@@ -4,8 +4,9 @@ import Header from "@/components/header";
 import { ClerkProvider } from "@clerk/nextjs";
 import { shadesOfPurple } from "@clerk/themes";
 import { Toaster } from "sonner";
-import Head from "next/head";
 import MainFooter from "@/components/footer";
+import ErrorBoundary from "@/components/error-boundary";
+import "@/lib/console-override";
 
 const inter = Outfit({ subsets: ["latin"] });
 
@@ -34,19 +35,17 @@ export default function RootLayout({ children }) {
       }}
     >
       <html lang="en">
-        <Head>
-          <title>{metadata.title}</title>
-          <meta name="description" content={metadata.description} />
-        </Head>
         <body className={`${inter.className} antialiased`}>
-          <Header />
-          <main className="bg-black text-white min-h-screen">{children}</main>
-          <Toaster richColors />
-          <footer className="bg-gray-900 py-12">
-            <div className="container mx-auto mt-10 px-4 text-center text-gray-200">
-              <MainFooter></MainFooter>
-            </div>
-          </footer>
+          <ErrorBoundary>
+            <Header />
+            <main className="bg-black text-white min-h-screen">{children}</main>
+            <Toaster richColors />
+            <footer className="bg-gray-900 py-12">
+              <div className="container mx-auto mt-10 px-4 text-center text-gray-200">
+                <MainFooter></MainFooter>
+              </div>
+            </footer>
+          </ErrorBoundary>
         </body>
       </html>
     </ClerkProvider>
