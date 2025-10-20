@@ -32,17 +32,18 @@ const SprintCreationForm = ({ projectTitle, projectKey, projectId, sprintKey }) 
     const { loading: createSpritLoading, fn: createSpiritFn, } = useFetch(createSprint)
 
     const onSubmit = async (data) => {
+        try {
+            await createSpiritFn(projectId,{...data,
+                startDate:dateRange.from,
+                endDate:dateRange.to
+            })
 
-        await createSpiritFn(projectId,{...data,
-            startDate:dateRange.from,
-            endDate:dateRange.to
-        })
-
-
-        setShowForm(false)
-        toast.success("Sprint created Successfully.")
-        router.refresh()
-
+            setShowForm(false)
+            toast.success("Sprint created Successfully.")
+            router.refresh()
+        } catch (error) {
+            toast.error(error.message || "Failed to create sprint")
+        }
     }
 
     return (

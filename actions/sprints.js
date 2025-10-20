@@ -19,11 +19,63 @@ export async function createSprint(projectId, data) {
     throw new Error("Project not found");
   }
 
+  // Check if sprint name already exists for this project
+  const existingSprint = await db.sprint.findFirst({
+    where: {
+      projectId: projectId,
+      name: data.name
+    }
+  });
+
+  if (existingSprint) {
+    throw new Error("A sprint with this name already exists for this project");
+  }
+
+  // Validate date range
+  const startDate = new Date(data.startDate);
+  const endDate = new Date(data.endDate);
+  
+  if (startDate >= endDate) {
+    throw new Error("End date must be after start date");
+  }
+
+  // Check for overlapping sprints
+  const overlappingSprint = await db.sprint.findFirst({
+    where: {
+      projectId: projectId,
+      status: { in: ["PLANNED", "ACTIVE"] },
+      OR: [
+        {
+          AND: [
+            { startDate: { lte: startDate } },
+            { endDate: { gte: startDate } }
+          ]
+        },
+        {
+          AND: [
+            { startDate: { lte: endDate } },
+            { endDate: { gte: endDate } }
+          ]
+        },
+        {
+          AND: [
+            { startDate: { gte: startDate } },
+            { endDate: { lte: endDate } }
+          ]
+        }
+      ]
+    }
+  });
+
+  if (overlappingSprint) {
+    throw new Error("Sprint dates overlap with existing sprint: " + overlappingSprint.name);
+  }
+
   const sprint = await db.sprint.create({
     data: {
       name: data.name,
-      startDate: data.startDate,
-      endDate: data.endDate,
+      startDate: startDate,
+      endDate: endDate,
       status: "PLANNED",
       projectId: projectId,
     },
@@ -40,6 +92,35 @@ export async function createSprint(projectId, data) {
     createdAt: sprint.createdAt.toISOString(),
     updatedAt: sprint.updatedAt.toISOString()
   };
+}
+
+export async function getSprints(projectId) {
+  const { userId, orgId } = await auth();
+
+  if (!userId || !orgId) {
+    throw new Error("Unauthorized");
+  }
+
+  const project = await db.project.findUnique({
+    where: { id: projectId },
+    include: { sprints: { orderBy: { createdAt: "desc" } } },
+  });
+
+  if (!project || project.organizationId !== orgId) {
+    throw new Error("Project not found");
+  }
+
+  // Serialize sprints to plain objects
+  return project.sprints.map(sprint => ({
+    id: sprint.id,
+    name: sprint.name,
+    startDate: sprint.startDate.toISOString(),
+    endDate: sprint.endDate.toISOString(),
+    status: sprint.status,
+    projectId: sprint.projectId,
+    createdAt: sprint.createdAt.toISOString(),
+    updatedAt: sprint.updatedAt.toISOString()
+  }));
 }
 
 export async function updateSprintStatus(sprintId, newStatus) {

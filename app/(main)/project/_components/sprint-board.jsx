@@ -40,10 +40,10 @@ export default function SprintBoard({ sprints, projectId, orgId }) {
   const sprintsWithDates = useMemo(() => 
     sprints.map(sprint => ({
       ...sprint,
-      startDate: new Date(sprint.startDate),
-      endDate: new Date(sprint.endDate),
-      createdAt: new Date(sprint.createdAt),
-      updatedAt: new Date(sprint.updatedAt)
+      startDate: sprint.startDate instanceof Date ? sprint.startDate : new Date(sprint.startDate),
+      endDate: sprint.endDate instanceof Date ? sprint.endDate : new Date(sprint.endDate),
+      createdAt: sprint.createdAt instanceof Date ? sprint.createdAt : new Date(sprint.createdAt),
+      updatedAt: sprint.updatedAt instanceof Date ? sprint.updatedAt : new Date(sprint.updatedAt)
     })), [sprints]
   );
 
@@ -55,17 +55,17 @@ export default function SprintBoard({ sprints, projectId, orgId }) {
   const issuesWithDates = useMemo(() => 
     issues ? issues.map(issue => ({
       ...issue,
-      createdAt: new Date(issue.createdAt),
-      updatedAt: new Date(issue.updatedAt),
+      createdAt: issue.createdAt instanceof Date ? issue.createdAt : new Date(issue.createdAt),
+      updatedAt: issue.updatedAt instanceof Date ? issue.updatedAt : new Date(issue.updatedAt),
       assignee: issue.assignee ? {
         ...issue.assignee,
-        createdAt: new Date(issue.assignee.createdAt),
-        updatedAt: new Date(issue.assignee.updatedAt)
+        createdAt: issue.assignee.createdAt instanceof Date ? issue.assignee.createdAt : new Date(issue.assignee.createdAt),
+        updatedAt: issue.assignee.updatedAt instanceof Date ? issue.assignee.updatedAt : new Date(issue.assignee.updatedAt)
       } : null,
       reporter: {
         ...issue.reporter,
-        createdAt: new Date(issue.reporter.createdAt),
-        updatedAt: new Date(issue.reporter.updatedAt)
+        createdAt: issue.reporter.createdAt instanceof Date ? issue.reporter.createdAt : new Date(issue.reporter.createdAt),
+        updatedAt: issue.reporter.updatedAt instanceof Date ? issue.reporter.updatedAt : new Date(issue.reporter.updatedAt)
       }
     })) : [], [issues]
   );

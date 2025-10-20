@@ -18,8 +18,8 @@ import React, { useEffect, useState } from "react";
 const SprintManager = ({ sprint, setSprint, sprints, projectId }) => {
   const [status, setStatus] = useState(sprint.status);
 
-  const startDate = new Date(sprint.startDate);
-  const endDate = new Date(sprint.endDate);
+  const startDate = sprint.startDate instanceof Date ? sprint.startDate : new Date(sprint.startDate);
+  const endDate = sprint.endDate instanceof Date ? sprint.endDate : new Date(sprint.endDate);
   const now = new Date();
 
   const canStart =
@@ -44,6 +44,14 @@ const SprintManager = ({ sprint, setSprint, sprints, projectId }) => {
 
     if (status === "PLANNED" && isBefore(now, startDate)) {
       return `Starts in ${formatDistanceToNow(startDate)}`;
+    }
+
+    if (status === "PLANNED" && isAfter(now, startDate) && isBefore(now, endDate)) {
+      return "Ready to Start";
+    }
+
+    if (status === "ACTIVE") {
+      return `Ends in ${formatDistanceToNow(endDate)}`;
     }
 
     return null;
@@ -74,12 +82,16 @@ const SprintManager = ({ sprint, setSprint, sprints, projectId }) => {
             <SelectValue placeholder="Select Sprint" />
           </SelectTrigger>
           <SelectContent>
-            {sprints.map((sprint) => (
-              <SelectItem value={sprint.id} key={sprint.id}>
-                {sprint.name} ({format(sprint.startDate, "MMM d, yyyy")}) to{" "}
-                {format(sprint.endDate, "MMM d, yyyy")}
-              </SelectItem>
-            ))}
+            {sprints.map((sprint) => {
+              const sprintStartDate = sprint.startDate instanceof Date ? sprint.startDate : new Date(sprint.startDate);
+              const sprintEndDate = sprint.endDate instanceof Date ? sprint.endDate : new Date(sprint.endDate);
+              return (
+                <SelectItem value={sprint.id} key={sprint.id}>
+                  {sprint.name} ({format(sprintStartDate, "MMM d, yyyy")}) to{" "}
+                  {format(sprintEndDate, "MMM d, yyyy")}
+                </SelectItem>
+              );
+            })}
           </SelectContent>
         </Select>
 
