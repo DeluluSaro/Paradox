@@ -4,9 +4,9 @@ import Header from "@/components/header";
 import { ClerkProvider } from "@clerk/nextjs";
 import { shadesOfPurple } from "@clerk/themes";
 import { Toaster } from "sonner";
-import MainFooter from "@/components/footer";
 import ErrorBoundary from "@/components/error-boundary";
 import "@/lib/console-override";
+import Image from "next/image";
 
 const inter = Outfit({ subsets: ["latin"] });
 
@@ -45,9 +45,10 @@ export default function RootLayout({ children }) {
             <Header />
             <main className="bg-black text-white min-h-screen">{children}</main>
             <Toaster richColors />
-            <footer className="bg-gray-900 py-12">
-              <div className="container mx-auto mt-10 px-4 text-center text-gray-200">
-                <MainFooter></MainFooter>
+            <footer className="bg-black py-6 border-t border-gray-800">
+              <div className="container mx-auto px-4 flex items-center justify-center gap-3 text-gray-400">
+                <Image src="/paradox.ico" alt="Paradox logo" width={24} height={24} />
+                <span>Paradox reserved @2024</span>
               </div>
             </footer>
           </ErrorBoundary>

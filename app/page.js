@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { BarChart, Calendar, ChevronRight, Layout } from "lucide-react";
@@ -6,6 +7,7 @@ import Link from "next/link";
 import faqs from "@/data/faqs";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { MagnetizeButton } from "@/components/ui/magnetize-button";
+import { motion } from "framer-motion";
 
 const features = [
   {
@@ -95,23 +97,30 @@ export default function Home() {
 
       <section id="features" className="bg-gray-900 py-20 px-5">
         <div className="container mx-auto">
-          <h3 className="text-3xl font-bold mb-12 text-center gradient-title">
-            Key Features{" "}
-          </h3>
+          <h3 className="text-3xl font-bold mb-12 text-center gradient-title">Key Features</h3>
 
-          <div className="grid grid-col-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {features.map((feature, index) => {
               return (
-                <Card key={index} className="bg-gray-800">
-                  <CardContent className="pt-6">
-                    <feature.icon className="h-12 w-12 mb-4 text-blue-400"></feature.icon>
-
-                    <h4 className="text-xl font-semibold mb-2">
-                      {feature.title}
-                    </h4>
-                    <p className="text-gray-300">{feature.description}</p>
-                  </CardContent>
-                </Card>
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 24 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.3 }}
+                  transition={{ duration: 0.45, delay: index * 0.08, ease: "easeOut" }}
+                  className="relative group"
+                >
+                  <div className="absolute -inset-px rounded-2xl bg-gradient-to-br from-blue-500/20 via-purple-500/20 to-fuchsia-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <Card className="bg-gray-800/70 backdrop-blur rounded-2xl border border-gray-700/50 shadow-lg">
+                    <CardContent className="pt-6">
+                      <div className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-blue-500/15 text-blue-400 ring-1 ring-inset ring-blue-500/30 mb-4">
+                        <feature.icon className="h-6 w-6" />
+                      </div>
+                      <h4 className="text-xl font-semibold mb-2">{feature.title}</h4>
+                      <p className="text-gray-300 leading-relaxed">{feature.description}</p>
+                    </CardContent>
+                  </Card>
+                </motion.div>
               );
             })}
           </div>
@@ -120,42 +129,72 @@ export default function Home() {
 
       <section className="bg-gray-900 py-20 px-5">
         <div className="container mx-auto">
-          <h3 className="text-4xl font-bold mb-12 text-center gradient-title">
-            Frequently Asked Question
-          </h3>
-
-          <Accordion type="single" collapsible>
-            {faqs.map((faq,index)=>(
-                 <AccordionItem key={index}  value={ `item-${index}`}>
-                 <AccordionTrigger>{faq.question}</AccordionTrigger>
-                 <AccordionContent>
-                   {faq.answer}
-                 </AccordionContent>
-               </AccordionItem>
-            ))}
-         
-          </Accordion>
+          <h3 className="text-4xl font-bold mb-12 text-center gradient-title">Frequently Asked Questions</h3>
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.4 }}
+            className="mx-auto max-w-3xl"
+          >
+            <Accordion type="single" collapsible>
+              {faqs.map((faq, index) => (
+                <AccordionItem key={index} value={`item-${index}`} className="border-b border-gray-800">
+                  <AccordionTrigger className="text-left text-gray-200 hover:text-white data-[state=open]:text-white">
+                    {faq.question}
+                  </AccordionTrigger>
+                  <AccordionContent className="text-gray-300 leading-relaxed">
+                    {faq.answer}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </motion.div>
         </div>
       </section>
 
 
-      <section className="bg-gray-950 py-20 px-5">
+      <section className="relative overflow-hidden bg-gray-950 py-24 px-5">
+        <motion.div
+          aria-hidden
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(59,130,246,0.15),transparent_60%)]"
+        />
 
-        <div className="container mx-auto flex flex-col justify-center items-center"> 
-
-          <h3 className="text-3xl font-bold mb-12 text-center gradient-title" >
-
+        <div className="container mx-auto relative z-10 flex flex-col items-center text-center">
+          <motion.h3
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="text-3xl font-bold mb-6 gradient-title"
+          >
             Ready to transform your workflow
+          </motion.h3>
+          <motion.p
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="text-xl mb-12 text-gray-300 max-w-2xl"
+          >
+            Collaborate with your team and make your project workflow faster, clearer, and more enjoyable.
+          </motion.p>
 
-          </h3>
-          <p className="text-xl mb-12 text-center">Collaborate with your team and make a project workflow a better placee</p>
-
-
-        <Link href={'/'}> 
-        <MagnetizeButton particleCount={50} attractRadius={10} ></MagnetizeButton>
-        </Link>
+          <motion.div
+            initial={{ scale: 0.96, opacity: 0 }}
+            whileInView={{ scale: 1, opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+          >
+            <Link href={'/onboarding'}>
+              <MagnetizeButton particleCount={50} attractRadius={10} />
+            </Link>
+          </motion.div>
         </div>
-
       </section>
     </div>
   );

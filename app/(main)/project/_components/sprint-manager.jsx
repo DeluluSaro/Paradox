@@ -11,7 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import useFetch from "@/hooks/use-fetch";
-import { format, formatDistanceToNow, isAfter, isBefore } from "date-fns";
+import { format, formatDistanceToNow, isAfter, isBefore, differenceInCalendarDays } from "date-fns";
 import { Loader2Icon } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
@@ -55,6 +55,33 @@ const SprintManager = ({ sprint, setSprint, sprints, projectId }) => {
     }
 
     return null;
+  };
+
+  const getBadgeClass = () => {
+    if (status === "COMPLETED") {
+      return "bg-gray-600/20 text-gray-300 border border-gray-500/30";
+    }
+
+    if (status === "ACTIVE" && isAfter(now, endDate)) {
+      return "bg-red-600/20 text-red-300 border border-red-500/30";
+    }
+
+    if (status === "PLANNED" && isBefore(now, startDate)) {
+      return "bg-blue-600/20 text-blue-300 border border-blue-500/30";
+    }
+
+    if (status === "PLANNED" && isAfter(now, startDate) && isBefore(now, endDate)) {
+      return "bg-emerald-600/20 text-emerald-300 border border-emerald-500/30";
+    }
+
+    if (status === "ACTIVE" && isBefore(now, endDate)) {
+      const daysLeft = Math.max(0, differenceInCalendarDays(endDate, now));
+      if (daysLeft <= 2) return "bg-red-600/20 text-red-300 border border-red-500/30";
+      if (daysLeft <= 7) return "bg-yellow-500/20 text-yellow-300 border border-yellow-400/30";
+      return "bg-green-600/20 text-green-300 border border-green-500/30";
+    }
+
+    return "bg-gray-600/20 text-gray-300 border border-gray-500/30";
   };
 
   const { fn: updateStatus, loading, error, data: updatedStatus } =
@@ -120,7 +147,7 @@ const SprintManager = ({ sprint, setSprint, sprints, projectId }) => {
         <Loader2Icon className="w-10 h-10 animate-spin mt-10 text-center gradient-title"></Loader2Icon>
       )}
       {getStatusText() && (
-        <Badge className="mt-3 ml-1 self-start bg-gradient-to-br text-black from-blue-600 via-blue-100 to-blue-700">
+        <Badge className={`mt-3 ml-1 self-start rounded-full px-3 py-1 ${getBadgeClass()}`}>
           {getStatusText()}
         </Badge>
       )}
